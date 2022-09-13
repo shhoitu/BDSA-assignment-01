@@ -49,4 +49,32 @@ public class IteratorsTests
 		// Assert
 		Assert.Equal(new List<string>(new[] {"hey", "you", "over", "there"}), result);
 	}
+
+    [Fact]
+    public void Filter_given_3_4_1_2_32_17_and_even_predicate_returns_4_2_32() {
+		// Arrange
+		List<int> list = (new[] {3, 4, 1, 2, 32, 17}).ToList();
+        bool Even(int i) => i % 2 == 0;
+        Predicate<int> even = Even;
+
+		// Act
+		var result = Iterators.Filter<int>(list, even);
+		
+		// Assert
+		Assert.Equal(new List<int>(new[] {4, 2, 32}), result);
+	}
+
+    [Fact]
+    public void Filter_given_hej_min_allerbedste_ven_overalt_and_short_predicate_returns_hej_min_ven() {
+		// Arrange
+		List<string> list = (new[] {"hej", "min", "allerbedste", "ven", "overalt"}).ToList();
+        bool Short(string s) => s.Length <= 3;
+        Predicate<string> short_words = Short;
+
+		// Act
+		var result = Iterators.Filter<string>(list, short_words);
+		
+		// Assert
+		Assert.Equal(new List<string>(new[] {"hej", "min", "ven"}), result);
+	}
 }
