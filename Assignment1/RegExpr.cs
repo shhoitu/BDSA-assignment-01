@@ -29,9 +29,8 @@ public static class RegExpr
         var regex = @"(?<width>\d+)x(?<height>\d+)";
             foreach(string line in resolutions)
             {
-                var match = Regex.Matches(line, regex);
 
-                foreach(Match number in match)
+                foreach(Match number in Regex.Matches(line, regex))
                 {
                     GroupCollection groups = number.Groups;
                 
@@ -40,5 +39,32 @@ public static class RegExpr
             }
     }
 
-    public static IEnumerable<string> InnerText(string html, string tag) => throw new NotImplementedException();
+    public static IEnumerable<string> InnerText(string html, string tag) 
+    {
+        var regex = string.Format(@"<([{0}][^>]*)>(?<innerText>.+?)</{0}>", tag);
+
+        foreach (Match match in Regex.Matches(html, regex))
+        {
+            GroupCollection groups = match.Groups;
+            yield return Regex.Replace(groups["innerText"].Value, "<[^>]*>", "");
+        }
+    }
+
+    public static IEnumerable<(Uri url, string title)> Urls(string html)
+    {
+        var regex = @".*?href=""(?<url>\S*)"".*?(title=""(?<title>.*?)"".*?)?>(?<innerText>.*?)<";
+
+        foreach (Match match in Regex.Matches(html, regex))
+        {
+            if(match.Success)
+            {
+               Uri url = new Uri(match.Groups["url"].Value);
+                string title = match.Groups["title"].Value;
+            
+                if (title != "") yield return (url, title);
+                else yield return (url, title);
+            }
+            
+        }
+    }
 }
