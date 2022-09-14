@@ -62,7 +62,7 @@ public static class RegExpr
                 string title = match.Groups["title"].Value;
             
                 if (title != "") yield return (url, title);
-                else yield return (url, title);
+                else yield return ((url, match.Groups["innerText"].Value));
             }
             
         }
